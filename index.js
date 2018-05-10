@@ -30,10 +30,12 @@ fs.readFile('entrada.json', 'utf8', function(err, data){
             for(var i = 0; i < filaQ1.length; i++){
                 //Incrementar o tempo esperando em uma unidade
                 filaQ1[i].tempoEsperando++
+                console.log(countTempo+ " Processo:"+filaQ1[i].id+" tempo esperando: "+filaQ1[i].tempoEsperando);
                 //Verificar se o tempo de espera na filaQ1 superou 30 ms
                 if(filaQ1[i].tempoEsperando >= 30){
                     //Retirar o processo da filaQ1
                     processo = filaQ1.splice(i, 1);
+                    console.log(countTempo+" Processo:"+processo.id+" foi para filaQ0 depois de "+processo.tempoEsperando);
                     //Zerar o tempoEsperando
                     processo.tempoEsperando = 0;
                     //Colocar o processo no fim da filaQ0
@@ -45,12 +47,14 @@ fs.readFile('entrada.json', 'utf8', function(err, data){
         //Verificar se existe algum processo na filaIO
         if(filaIO){
             //Rodar o primeiro processo por 1 ms (menor unidade de tempo)
-            filaIO[0].tempoExecutando++; 
+            filaIO[0].tempoExecutando++;
+            console.log(countTempo+" Processo:"+filaIO[0].id+" executando em IO "+filaIO[0].tempoExecutando); 
             //Verifica se o processo já rodou o suficiente para voltar para filaQ0 ou para filaQ1
             if(filaIO[0].tempoExecutando >= 20){
                 //Retirar o processo da filaIO
                 processo = filaIO.shift();
                 //Zerar o tempoExecutando
+                console.log(countTempo+" Processo:"+processo[0].id+" executou "+processo[0].tempoExecutando+" e voltara para "+processo.filaOrigem);
                 processo.tempoExecutando = 0;
                 //Reduzir o número de operações de entrada e saída
                 processo.nrIO--;
@@ -71,6 +75,7 @@ fs.readFile('entrada.json', 'utf8', function(err, data){
             filaQ0[0].tempoExecutando++;
             //Inclumentar o tempo executando RR em 1 unidade
             filaQ0[0].tempoRR++;
+            console.log(countTempo+" Processo:"+filaQ0[0].id+" execução total"+filaQ0[0].tempoExecutando+" RR "+filaQ0[0].tempoRR);
             //Verifica se o processo já rodou o suficiente para ir para filaIO
             if(filaQ0[0].tempoExecutando >= filaQ0[0].surtoCPU){
                 //Retira o processo da filaQ0
