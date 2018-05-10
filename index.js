@@ -12,6 +12,7 @@ fs.readFile('entrada.json', 'utf8', function(err, data){
     var filaQ0 = [];
     var filaQ1 = [];
     var filaIO = [];
+    var filaFinalizado = [];
     var processo = {};
     var countTempo = 0;
     //Colocar processos da entrada na fila
@@ -21,6 +22,8 @@ fs.readFile('entrada.json', 'utf8', function(err, data){
     }
     //Rodar enquanto houver pelo menos um processo em alguma das filas
     while(filaQ0||filaQ1||filaIO){
+        //Incrementar o tempo geral
+        countTempo++;
         //Verificar se existe processos na filaQ1
         if(filaQ1){
             //Verificar se existe alguma processo há muito tempo na filaQ1
@@ -81,6 +84,10 @@ fs.readFile('entrada.json', 'utf8', function(err, data){
                     //Coloca o processo na filaIO
                     filaIO.push(processo);
                 }//Caso não existam operações, processo terminou sua execução
+                else{
+                    processo.tempoFinal = countTempo;
+                    filaFinalizado.push(processo);
+                }
             }//Verifica se o processo já rodou tempo suficiente no Round-Robin
             else if(filaQ0[0].tempoRR >= 10){
                 //Retirar o processo da filaQ0
@@ -109,6 +116,10 @@ fs.readFile('entrada.json', 'utf8', function(err, data){
                         //Coloca o processo na filaIO
                         filaIO.push(processo);
                     }//Caso não existam operações, processo terminou sua execução
+                    else{
+                        processo.tempoFinal = countTempo;
+                        filaFinalizado.push(processo);
+                    }
                 }
             }
         }
