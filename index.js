@@ -1,5 +1,4 @@
 //Diagrama de Gantt
-//Controle para terminar o processo pelo nrIO
 //CPU -> IO -> CPU -> IO -> ... -> CPU -> IO -> CUP
 //Controle para o Round Robin
 
@@ -51,6 +50,8 @@ fs.readFile('entrada.json', 'utf8', function(err, data){
                 processo = filaIO.shift();
                 //Zerar o tempoExecutando
                 processo.tempoExecutando = 0;
+                //Reduzir o número de operações de entrada e saída
+                processo.nrIO--;
                 //Verificar de qual fila o processo veio
                 if(processo.filaOrigem === 'filaQ0'){
                     //Colocar o processo na filaQ0
@@ -74,8 +75,11 @@ fs.readFile('entrada.json', 'utf8', function(err, data){
                 processo.tempoExecutando = 0;
                 //Definir a fila origem como filaQ0
                 processo.filaOrigem = 'filaQ0';
-                //Coloca o processo na filaIO
-                filaIO.push(processo);
+                //Verificar se ainda existem operações de IO
+                if(processo.nrIO > 0){
+                    //Coloca o processo na filaIO
+                    filaIO.push(processo);
+                }//Caso não existam operações, processo terminou sua execução
             }//Verifica se o processo já rodou tempo suficiente no Round-Robin
             else if(filaQ0[0].tempoExecutando >= 10){
                 //Retirar o processo da filaQ0
@@ -97,8 +101,11 @@ fs.readFile('entrada.json', 'utf8', function(err, data){
                     processo.tempoExecutando = 0;
                     //Definir a fila origem como filaQ1
                     processo.filaOrigem = 'filaQ1';
-                    //Coloca o processo na filaIO
-                    filaIO.push(processo);
+                    //Verificar se ainda existem operações de IO
+                    if(processo.nrIO > 0){
+                        //Coloca o processo na filaIO
+                        filaIO.push(processo);
+                    }//Caso não existam operações, processo terminou sua execução
                 }
             }
         }
