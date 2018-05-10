@@ -1,6 +1,5 @@
 //Diagrama de Gantt
 //CPU -> IO -> CPU -> IO -> ... -> CPU -> IO -> CUP
-//Controle para o Round Robin
 
 var fs = require("fs");
 
@@ -67,6 +66,8 @@ fs.readFile('entrada.json', 'utf8', function(err, data){
         if(filaQ0){
             //Rodar o primeiro processo por 1 ms (menor unidade de tempo)
             filaQ0[0].tempoExecutando++;
+            //Inclumentar o tempo executando RR em 1 unidade
+            filaQ0[0].tempoRR++;
             //Verifica se o processo já rodou o suficiente para ir para filaIO
             if(filaQ0[0].tempoExecutando >= filaQ0[0].surtoCPU){
                 //Retira o processo da filaQ0
@@ -81,9 +82,11 @@ fs.readFile('entrada.json', 'utf8', function(err, data){
                     filaIO.push(processo);
                 }//Caso não existam operações, processo terminou sua execução
             }//Verifica se o processo já rodou tempo suficiente no Round-Robin
-            else if(filaQ0[0].tempoExecutando >= 10){
+            else if(filaQ0[0].tempoRR >= 10){
                 //Retirar o processo da filaQ0
                 processo = filaQ0.shift();
+                //Zerar o tempoRR
+                processo.tempoRR = 0;
                 //Colocar o processo na filaQ1
                 filaQ1.push(processo);
             }
